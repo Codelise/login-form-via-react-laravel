@@ -1,0 +1,21 @@
+frontend/
+├── src/
+│   ├── api/            # API call functions (axios/fetch)
+│   ├── components/     # Reusable UI components
+│   ├── pages/          # CreateAccount.jsx, Login.jsx
+│   ├── context/        # Auth state (React Context)
+│   └── App.jsx
+├── .env                # VITE_API_URL=http://localhost:8000
+└── package.json
+
+backend/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/   # AuthController.php
+│   │   └── Middleware/    # CORS, Auth middleware
+│   └── Models/            # User.php
+├── routes/
+│   └── api.php            # All your API routes live here
+├── database/
+│   └── migrations/        # users table schema
+└── .env                   # DB credentials, APP_KEY

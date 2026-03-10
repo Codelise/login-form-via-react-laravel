@@ -15,7 +15,7 @@ export default function Login() {
   return (
     <div>
       <h2>Login</h2>
-      <form action="" onSubmit={loginAccount}>
+      <form onSubmit={loginAccount}>
         <label htmlFor="email">Email</label>
         <input
           type="email"

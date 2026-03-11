@@ -1,26 +1,45 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axiosClient from "../api/axios";
 
 export default function CreateAccount() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [notif, setNotif] = useState("");
 
   let loginNavigate = useNavigate();
 
-  function submitAccount(e) {
+  async function submitAccount(e) {
     e.preventDefault();
 
     if (!name || !email || !password || !confirmPassword) {
       return alert("All fields are required!");
     }
 
-    if (password === confirmPassword) {
-      alert("Account created successfully!");
-      loginNavigate("/login");
-    } else {
-      alert("Passwords do not match");
+    if (password !== confirmPassword) {
+      return alert("Passwords do not match");
+    }
+
+    try {
+      // fetches csrf cookie from Laravel
+      await axiosClient.get("/sanctum/csrf-cookie");
+      // sends post request to laravel
+      const res = await axiosClient.post("/api/register", {
+        // the values of objects here are from the useState
+        name: name,
+        email: email,
+        password: password,
+        "confirm-password": confirmPassword,
+      });
+      setNotif("Account created successfully!");
+      // TO BE CONTINUED
+      setTimeout(() => {
+        loginNavigate("/login");
+      }, 2500);
+    } catch (error) {
+      setNotif(error.response?.data?.message || "Failed to create account!");
     }
   }
 
@@ -62,6 +81,7 @@ export default function CreateAccount() {
         />
         <button type="submit">Register</button>
       </form>
+      <p>{notif}</p>
       <Link to="/login">Login</Link>
     </div>
   );

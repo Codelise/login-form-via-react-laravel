@@ -1,15 +1,28 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import axiosClient from "../api/axios";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function loginAccount(e) {
+  async function loginAccount(e) {
     e.preventDefault();
     if (!email || !password) {
-      alert("All fields are required!");
-    } else {
-      alert("Logged in successfully!");
+      return alert("All fields are required!");
+    }
+
+    try {
+      // fetches csrf cookie from Laravel
+      await axiosClient.get("/sanctum/csrf-cookie");
+      // post request to Laravel
+      // TO BE CONTINUED LATER
+      const response = await axiosClient.post("/api/login", {
+        email: email,
+        password: password,
+      });
+      return alert("Logged in successfully");
+    } catch (error) {
+      return alert(error.response?.data.message || "Failed to log in");
     }
   }
   return (
